@@ -2,11 +2,54 @@ version: 2
 
 sources:
   - name: gz_raw_data
-    description: raw
+    description: greenweez raw data source
     tables:
       - name: raw_gz_product
-        description: product
+        description: product            
+        columns:
+          - name: products_id
+            description: product ID
+            tests:
+              - unique
+              - not_null
+          - name: purchSE_PRICE
+            description: purchase price
+            
+
       - name: raw_gz_sales 
-        description: sales
+        description: sales of greenweez
+        columns:
+          - name:  date_date
+            description: date of purchase 
+          - name: orders_id
+            description: order ID
+          - name: pdt_id
+            description: products ID
+          - name: revenue
+            description: revenue per order
+          - name: quantity
+            description: quantity sold
+        tests:
+        - unique:
+            column_name: "(orders_id || '-' || pdt_id)"   
+
       - name: raw_gz_ship
-        description: ship
+        description: ship       
+        columns:
+          - name: orders_id
+            description: order ID
+            tests:
+              - unique
+              - not_null
+          - name: shipping_fee
+            description: Shipping fees for each order paid by customer
+          - name: logcost
+            description: Logistics cost
+          - name: ship_cost
+            description: Shipping cost
+            
+freshness:  
+  warn_after:
+    count: 90
+    period: day
+loaded_at_field: "CAST(date_date AS TIMESTAMP)"
